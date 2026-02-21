@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Waitlist - OpenClaw Setup</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .container { background: white; padding: 40px; border-radius: 16px; max-width: 450px; width: 100%; text-align: center; }
+        h1 { color: #1a1a2e; margin-bottom: 10px; }
+        p { color: #666; margin-bottom: 30px; }
+        .lobster { font-size: 4rem; margin-bottom: 20px; }
+        input, select, textarea { width: 100%; padding: 14px; margin-bottom: 15px; border: 2px solid #eee; border-radius: 8px; font-size: 1rem; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: #00d4ff; }
+        button { width: 100%; background: #00d4ff; color: #1a1a2e; padding: 16px; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: transform 0.2s; }
+        button:hover { transform: scale(1.02); }
+        .success { background: #e8f5e9; color: #2e7d32; padding: 20px; border-radius: 8px; display: none; }
+        .spots { background: #fff3e0; color: #e65100; padding: 10px; border-radius: 8px; font-size: 0.9rem; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="lobster">🦞</div>
+        <h1>Join the Waitlist</h1>
+        <p>Be the first to know when we open new spots. Get early access and a discount.</p>
+        
+        <div class="spots">🔥 Only 2 spots left in this batch!</div>
+        
+        <form id="waitlistForm">
+            <input type="text" name="name" placeholder="Your Name" required>
+            <input type="email" name="email" placeholder="Your Email" required>
+            <select name="interest">
+                <option value="">I'm interested in...</option>
+                <option value="basic">Basic Setup ($149)</option>
+                <option value="pro">Pro Setup ($500)</option>
+                <option value="hosting">Monthly Hosting Only</option>
+                <option value="not-sure">Not Sure Yet</option>
+            </select>
+            <button type="submit">Join Waitlist</button>
+        </form>
+        
+        <div class="success" id="success">
+            <strong>You're on the list! 🎉</strong><br>
+            We'll email you when spots open up.
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('waitlistForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // In production, send to backend/Google Sheets/Airtable
+            document.getElementById('waitlistForm').style.display = 'none';
+            document.getElementById('success').style.display = 'block';
+        });
+    </script>
+</body>
+</html>
