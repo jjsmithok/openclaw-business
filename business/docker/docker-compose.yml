@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  openclaw:
+    build: 
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: openclaw-instance
+    restart: unless-stopped
+    ports:
+      - "18789:18789"
+    environment:
+      - TELEGRAM_ENABLED=${TELEGRAM_ENABLED:-false}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN:-}
+      - OPENCLAW_SECRET=${OPENCLAW_SECRET:-}
+    volumes:
+      - openclaw-data:/app/data
+      - openclaw-config:/app/config
+    networks:
+      - openclaw-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:18789/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Optional: Traefik reverse proxy for SSL
+  traefik:
+    image: traefik:v3.0
+    container_name: openclaw-traefik
+    restart: unless-stopped
+    depends_on:
+      - openclaw
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik/traefik.yml:/etc/traefik/traefik.yml:ro
+      - traefik-certs:/etc/traefik/certs
+    networks:
+      - openclaw-network
+
+volumes:
+  openclaw-data:
+  openclaw-config:
+  traefik-certs:
+
+networks:
+  openclaw-network:
+    driver: bridge
