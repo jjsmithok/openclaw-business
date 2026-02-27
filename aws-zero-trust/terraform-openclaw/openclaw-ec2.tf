@@ -20,6 +20,13 @@ provider "aws" {
 # VARIABLES
 # =====================================================
 
+# Server name (used for naming resources)
+variable "server_name" {
+  description = "Name for the OpenClaw server (e.g., dev-openclaw)"
+  type        = string
+  default     = "openclaw"
+}
+
 variable "openclaw_version" {
   description = "OpenClaw version to install"
   type        = string
@@ -30,6 +37,13 @@ variable "instance_type" {
   description = "EC2 instance type"
   type        = string
   default     = "t3.medium"
+}
+
+# Model configuration
+variable "model_name" {
+  description = "Model name (e.g., minimax/MiniMax-M2.5)"
+  type        = string
+  default     = "minimax/MiniMax-M2.5"
 }
 
 variable "ssh_key_name" {
@@ -53,8 +67,8 @@ variable "aws_secret_key" {
   sensitive   = true
 }
 
-variable "minimax_api_key" {
-  description = "MiniMax API Key for OpenClaw"
+variable "model_api_key" {
+  description = "Model API Key for OpenClaw"
   type        = string
   default     = ""
   sensitive   = true
@@ -155,13 +169,13 @@ resource "aws_security_group" "openclaw" {
   }
   
   tags = {
-    Name = "openclaw-sg"
+    Name = "${var.server_name}-sg"
   }
 }
 
 # IAM Role for EC2
 resource "aws_iam_role" "openclaw" {
-  name = "openclaw-ec2-role"
+  name = "${var.server_name}-ec2-role"
   
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -177,7 +191,7 @@ resource "aws_iam_role" "openclaw" {
 
 # IAM Instance Profile
 resource "aws_iam_instance_profile" "openclaw_profile" {
-  name = "openclaw-profile"
+  name = "${var.server_name}-profile"
   role = aws_iam_role.openclaw.name
 }
 
@@ -246,7 +260,7 @@ locals {
                 },
                 agents: {
                   defaults: {
-                    model: "minimax/MiniMax-M2.5"
+                    model: "${var.model_name}"
                   }
                 },
                 channels: {
@@ -260,17 +274,17 @@ locals {
               }
               OPENCLAWCONFIG
               
-              # Create Minimax auth profile
-              cat > /home/ubuntu/.openclaw/agents/main/agent/auth-profiles.json << 'MINIMAXAUTH'
+              # Create model auth profile
+              cat > /home/ubuntu/.openclaw/agents/main/agent/auth-profiles.json << 'MODELAUTH'
               {
                 "minimax": {
                   "provider": "minimax",
                   "auth": {
-                    "api_key": "${var.minimax_api_key}"
+                    "api_key": "${var.model_api_key}"
                   }
                 }
               }
-              MINIMAXAUTH
+              MODELAUTH
               
               chown -R ubuntu:ubuntu /home/ubuntu/.openclaw
               
@@ -311,7 +325,7 @@ resource "aws_instance" "openclaw" {
   user_data = base64encode(local.user_data)
   
   tags = {
-    Name = "openclaw-agent"
+    Name = "${var.server_name}"
     Environment = "Dev"
   }
 }
