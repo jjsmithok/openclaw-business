@@ -104,8 +104,8 @@ resource "aws_organizations_policy" "sandbox_auto_cleanup" {
 
 # Deny Root Login - Attach to Root (applies to all)
 resource "aws_organizations_policy_attachment" "deny_root_to_root" {
-  policy_id  = aws_organizations_policy.deny_root_login.id
-  target_id  = data.aws_organizations_roots.root.roots[0].id
+  policy_id = aws_organizations_policy.deny_root_login.id
+  target_id = data.aws_organizations_roots.root.roots[0].id
 }
 
 # Deny Human Console - Attach to Prod (will need to update target_id after creating Prod account)
@@ -122,8 +122,8 @@ resource "aws_organizations_policy_attachment" "deny_root_to_root" {
 
 output "scp_policy_ids" {
   value = {
-    deny_root_login       = aws_organizations_policy.deny_root_login.id
+    deny_root_login      = aws_organizations_policy.deny_root_login.id
     deny_human_console   = aws_organizations_policy.deny_human_console_prod.id
-    sandbox_auto_cleanup  = aws_organizations_policy.sandbox_auto_cleanup.id
+    sandbox_auto_cleanup = aws_organizations_policy.sandbox_auto_cleanup.id
   }
 }

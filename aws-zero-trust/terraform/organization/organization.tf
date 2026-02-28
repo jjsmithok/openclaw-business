@@ -119,11 +119,11 @@ resource "aws_iam_user_policy_attachment" "apps_readonly" {
 
 output "environment_accounts" {
   value = {
-    sandbox  = aws_organizations_account.sandbox.id
-    dev      = aws_organizations_account.dev.id
-    test     = aws_organizations_account.test.id
-    preprod  = aws_organizations_account.preprod.id
-    prod     = aws_organizations_account.prod.id
+    sandbox = aws_organizations_account.sandbox.id
+    dev     = aws_organizations_account.dev.id
+    test    = aws_organizations_account.test.id
+    preprod = aws_organizations_account.preprod.id
+    prod    = aws_organizations_account.prod.id
   }
 }
 

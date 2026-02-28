@@ -10,10 +10,19 @@ terraform {
       version = "~> 5.0"
     }
   }
+
+  # Store state locally for POC
+  backend "local" {
+    path = "terraform.tfstate"
+  }
 }
 
 provider "aws" {
   region = "us-east-1"
+
+  # Skip request signing for local/testing
+  skip_credentials_validation = false
+  skip_metadata_api_check     = false
 }
 
 # =====================================================
@@ -23,19 +32,20 @@ provider "aws" {
 locals {
   # Source accounts to grant read access
   source_accounts = [
-    "605412636532",  # Sandbox
-    "811890957660",  # Dev
-    "949900383634",  # Test
-    "490058394713",  # PreProd
-    "693099116199",  # Prod
-    "853962316430",  # Security
-    "876442841338",  # Control Tower
+    "605412636532", # Sandbox
+    "811890957660", # Dev
+    "949900383634", # Test
+    "490058394713", # PreProd
+    "693099116199", # Prod
+    "853962316430", # Security
+    "876442841338", # Control Tower
   ]
 
   # CIDR blocks allowed to access (update for your VPC)
   allowed_cidrs = ["10.0.0.0/8"]
 
   # Optional: Git repo for docker-compose
+  # Leave empty to use placeholder
   github_repo = ""
 }
 
@@ -47,10 +57,10 @@ module "monitoring_ec2" {
   source = "./modules/monitoring-ec2"
 
   # Core settings
-  environment        = "poc"
-  instance_type      = "t4g.medium"  # 4GB RAM minimum for observability stack
-  volume_size_gb     = 30
-  shutdown_behavior = "stop"  # Important: allows stop/start for testing
+  environment       = "poc"
+  instance_type     = "t4g.medium" # 4GB RAM minimum for observability stack
+  volume_size_gb    = 30
+  shutdown_behavior = "stop" # Important: allows stop/start for testing
 
   # Network
   allowed_cidr_blocks = local.allowed_cidrs

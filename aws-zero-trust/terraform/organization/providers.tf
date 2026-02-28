@@ -30,52 +30,52 @@ data "aws_organizations_roots" "root" {
 # Helper: Find OU by name
 # Usage: data.aws_organizations_organizational_unit.sandbox
 data "aws_organizations_organizational_unit" "sandbox" {
-  name = "Sandbox"
+  name      = "Sandbox"
   parent_id = data.aws_organizations_roots.root.roots[0].id
 }
 
 data "aws_organizations_organizational_unit" "dev" {
-  name = "Dev"
+  name      = "Dev"
   parent_id = data.aws_organizations_roots.root.roots[0].id
 }
 
 data "aws_organizations_organizational_unit" "test" {
-  name = "Test"
+  name      = "Test"
   parent_id = data.aws_organizations_roots.root.roots[0].id
 }
 
 data "aws_organizations_organizational_unit" "preprod" {
-  name = "PreProd"
+  name      = "PreProd"
   parent_id = data.aws_organizations_roots.root.roots[0].id
 }
 
 data "aws_organizations_organizational_unit" "prod" {
-  name = "Prod"
+  name      = "Prod"
   parent_id = data.aws_organizations_roots.root.roots[0].id
 }
 
 data "aws_organizations_organizational_unit" "security" {
-  name = "Security"
+  name      = "Security"
   parent_id = data.aws_organizations_roots.root.roots[0].id
 }
 
 data "aws_organizations_organizational_unit" "monitoring" {
-  name = "Monitoring"
+  name      = "Monitoring"
   parent_id = data.aws_organizations_roots.root.roots[0].id
 }
 
 data "aws_organizations_organizational_unit" "logging" {
-  name = "Logging"
+  name      = "Logging"
   parent_id = data.aws_organizations_roots.root.roots[0].id
 }
 
 data "aws_organizations_organizational_unit" "control_tower" {
-  name = "ControlTower"
+  name      = "ControlTower"
   parent_id = data.aws_organizations_roots.root.roots[0].id
 }
 
 data "aws_organizations_organizational_unit" "environments" {
-  name = "Environments"
+  name      = "Environments"
   parent_id = data.aws_organizations_roots.root.roots[0].id
 }
 
@@ -108,8 +108,8 @@ output "existing_ous" {
 
 output "existing_accounts" {
   value = {
-    security_tools   = data.aws_organizations_account.security_tools.id
-    monitoring       = data.aws_organizations_account.monitoring.id
+    security_tools  = data.aws_organizations_account.security_tools.id
+    monitoring      = data.aws_organizations_account.monitoring.id
     central_logging = data.aws_organizations_account.central_logging.id
     control_tower   = data.aws_organizations_account.control_tower.id
   }
